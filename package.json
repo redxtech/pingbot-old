@@ -1,0 +1,23 @@
+{
+  "name": "PingBot",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "env": "envup",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "bufferutil": "^3.0.3",
+    "discord.js": "^11.3.2",
+    "dotenv": "^5.0.1",
+    "erlpack": "hammerandchisel/erlpack",
+    "libsodium-wrappers": "^0.7.3",
+    "node-opus": "^0.2.7"
+  },
+  "devDependencies": {
+    "envup": "^1.1.0",
+    "nodemon": "^1.17.3"
+  }
+}
