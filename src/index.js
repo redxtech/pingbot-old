@@ -22,10 +22,12 @@ const main = () => {
   // the message listener
   client.on('message', message => {
     // if the message isn't in a dm and it's not a message sent by this bot
+    // noinspection JSUnresolvedVariable
     if (message.channel.type !== 'dm' && message.member.user.id !== client.user.id) {
       // call the action functions
       pingEveryone(message)
       react(message)
+      nickname(message)
       pingbotLove(message)
       oof(message)
     }
