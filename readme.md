@@ -14,6 +14,10 @@ For each message that is sent, there is chance that pingbot will:
 If you send a message that shows appreciation for pingbot (if it matches this regex:
 `/\bi\b.+\b(love|like|appreciate)\b.+\bpingbot\b/`), pingbot will respond with a heart to show it's appreciation of you.
 
+Additionally, if you send a message that shows dislike for pingbot (if it matches this regex:
+`/(\bi\b.+\b(hate|dislike)\b.+\bpingbot\b)|(\bpingbot\b.+\b(sucks|is (bad|garbage|trash|ass|shit))\b)|(fuck.+pingbot)/`),
+pingbot will respond with a sad face that will randomly switch between forwards and backwards.
+
 ### O O F
 If you send a message that contains the word 'o o f', pingbot with do one of two things:
  - If you are in a voice channel, pingbot will join your voice channel, play the roblox *oof* sound, and leave.

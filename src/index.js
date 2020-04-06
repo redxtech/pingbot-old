@@ -29,6 +29,7 @@ const main = () => {
       react(message)
       nickname(message)
       pingbotLove(message)
+      pingbotHate(message)
       oof(message)
     }
   })
@@ -66,7 +67,7 @@ const generateNickname = () => {
   const nicknameArray = []
 
   // a list of possible characters to show up in the nickname
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-=_+[]\{}|;\':",./<>?'
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-=_+[]\{}|;\':",./<>? '
 
   // the length of the nickname, between 6 & 26
   const nicknameLength = random(20) + 6
@@ -80,9 +81,14 @@ const generateNickname = () => {
   return nicknameArray.join('')
 }
 
-// if the message inclues some form of i love pingbot respond with a heart
+// if the message includes some form of i love pingbot respond with a heart
 const pingbotLove = message => /\bi\b.+\b(love|like|appreciate)\b.+\bpingbot\b/.test(message.content.toLowerCase())
   ? message.channel.send('heart <3')
+  : false
+
+// if the message includes some form of i hate pingbot respond with a heart
+const pingbotHate = message => /(\bi\b.+\b(hate|dislike)\b.+\bpingbot\b)|(\bpingbot\b.+\b(sucks|is (bad|garbage|trash|ass|shit))\b)|(fuck.+pingbot)/.test(message.content.toLowerCase())
+  ? message.channel.send(chance(2) ? ':\'(' : ')\':')
   : false
 
 // if the message is 'o o f' either send back 'o o f' or play the sound in voice chat
