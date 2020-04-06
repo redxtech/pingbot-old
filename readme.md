@@ -1,5 +1,5 @@
 # pingbot
-> A Shitpost in bot form.
+> A shitpost in bot form.
 
 ## Features
 
@@ -31,11 +31,31 @@ environment variables:
  - `REACT_CHANCE` will affect how often pingbot reacts to messages (default: `100`).
  - `NICKNAME_CHANCE` will affect how often pingbot changes someone's nickname (default: `1000`).
 
+## Setup
+Setup is simple:
+ 1. Clone the bot.
+ 2. Install the dependencies with `yarn` (or `npm install`). If either of these commands don't work, you need to install
+ [node][2].
+ 3. Create a bot user & invite it to your server (follow [this guide][1], but use the code in this repo as the bot's
+ code).
+ 4. Create a `.env` file and set `BOT_TOKEN` equal to the token obtained in the previous step.
+ 5. Add your desired options to the `.env` file.
+ 6. Run the bot with `yarn start` (or `npm run start`). Alternatively you can run it with `node ./src/index.js`.
+ 7. Enjoy!
+
+[1]: https://www.howtogeek.com/364225/how-to-make-your-own-discord-bot/
+[2]: https://nodejs.org
+
+### Personal Recommendation
+When creating the bot user, you are most likely going to want to choose an image for pingbot to use as a profile
+picture. My personal favourite is shown below with two variations: normal and pinged. I recommend these because they
+perfectly capture the essence of the bot, and they were the server icon of the server this bot was written for.
+
+![pingbot][normal]
+![pingbot pinged][pinged]
+
+[normal]: resources/pingbot.png
+[pinged]: resources/pingbot_pinged.png
+
 ## Author
 **pingbot** © [Gabe Dunn](https://github.com/redxtech), Released under the [MIT](./license.md) License.
-
- 
-For each message sent it has a one in 100 (configurable) chance of pinging everyone
-And if your message is "o o f" it moves you to a voice channel, plays the roblox oof, moves your back to where you were before and leaves the voice channel
-And also it adds random reactions to random messages.
-To set up the bot, run npm i and fill out .env with the appropriate values.
