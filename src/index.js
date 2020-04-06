@@ -1,80 +1,123 @@
+/*
+ * Gabe Dunn 2020
+ * All of pingbot is contained within this file.
+ */
+
 require('dotenv').config()
 const discord = require('discord.js')
+const { join } = require('path')
 
-const client = new discord.Client()
-let oofReady = true
-let wew
-let general
-let bestWew
+// global variable for OOF_READY
+let OOF_READY = true
 
-client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}`)
-  wew = client.guilds.get(process.env.WEW_SERVER_ID)
-  general = wew.channels.get(process.env.WEW_GENERAL_CHANNEL)
-  bestWew = wew.emojis.array().
-    filter(emoji => emoji.id.toString() === process.env.WEW_EMOJI_ID)[0]
-})
+const main = () => {
+  // initialize the discord.js client
+  const client = new discord.Client()
 
-client.on('message', msg => {
-  if (msg.channel.type !== 'dm' && msg.member.user.id !== client.user.id) {
-    // Calculate chances of events.
-    const react = (Math.floor(Math.random() * process.env.REACT_CHANCE) + 1) ===
-      1
-    const everyone = (Math.floor(Math.random() * process.env.EVERYONE_CHANCE) +
-      1) === 1
-    const nick = (Math.floor(Math.random() * process.env.NICK_CHANCE) + 1) === 1
-    // Get lowercase of message.
-    const lowMsgContent = msg.content.toLowerCase()
+  // log that the bot logged in
+  client.on('ready', () => {
+    console.log(`Logged in as ${client.user.tag}`)
+  })
 
-    // Do bot things.
-    if (react) {
-      const reaction = wew.emojis.array()[Math.floor(Math.random() *
-        wew.emojis.array().length)]
-      msg.react(reaction)
+  // the message listener
+  client.on('message', message => {
+    // if the message isn't in a dm and it's not a message sent by this bot
+    if (message.channel.type !== 'dm' && message.member.user.id !== client.user.id) {
+      // call the action functions
+      pingEveryone(message)
+      react(message)
+      pingbotLove(message)
+      oof(message)
     }
+  })
 
-    if (everyone) {
-      general.send('@everyone')
-    }
+  // log the bot in
+  client.login(process.env.BOT_TOKEN).then().catch()
+}
 
-    if (lowMsgContent.includes('i ') && lowMsgContent.includes(' love ') &&
-      lowMsgContent.includes(' pingbot')) {
-      msg.channel.send('heart <3')
-    }
+// has a one in <outOf> chance of returning true
+const chance = outOf => random(outOf) === 1
 
-    if (nick) {
-      const nameArray = []
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-      const nameLength = (Math.floor(Math.random() * 20) + 6)
-      for (let i = 0; i < nameLength; i++) {
-        nameArray.push(chars.charAt(Math.floor(Math.random() * chars.length)))
-      }
-      const name = nameArray.join('')
-      msg.member.setNickname(name)
-    }
+// generates a random number up to <upTo>
+const random = upTo => (Math.floor(Math.random() * upTo) + 1)
 
-    if (lowMsgContent === 'o o f') {
-      // o o f
-      oofReady = false
-      const voiceChannels = msg.guild.channels.array().
-        filter(channel => channel.type === 'voice')
-      if (voiceChannels.length >= 1) {
-        const currentVoiceChannel = msg.member.voiceChannel
-        const oofVoiceChannel = voiceChannels[0]
-        msg.member.setVoiceChannel(oofVoiceChannel)
-        oofVoiceChannel.join().then(connection => {
-          const dispatcher = connection.playFile(`${__dirname}/sounds/oof.ogg`)
-          dispatcher.on('end', () => {
-            oofVoiceChannel.leave()
-            msg.member.setVoiceChannel(currentVoiceChannel)
-            oofReady = true
-          })
-        }).catch(err => console.log(err))
-      } else {
-        msg.reply('o o f')
-      }
+// pings everyone if the chance function returns true
+const pingEveryone = message => chance(process.env.EVERYONE_CHANCE || 10000)
+  ? message.reply('@everyone')
+  : false
+
+// reacts with a random emoji if the chance function returns true
+const react = message => chance(process.env.REACT_CHANCE | 100)
+  ? message.react(message.guild.emojis.cache.random())
+  : false
+
+// changes the user's nickname if the chance function returns true
+const nickname = message => chance(process.env.NICKNAME_CHANCE || 1000)
+  ? message.member.setNickname(generateNickname())
+  : false
+
+// generate a random string of characters to use as a nickname
+const generateNickname = () => {
+  // initialize empty array to store the name in
+  const nicknameArray = []
+
+  // a list of possible characters to show up in the nickname
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-=_+[]\{}|;\':",./<>?'
+
+  // the length of the nickname, between 6 & 26
+  const nicknameLength = random(20) + 6
+
+  // push a random character from the characters into the nickname array <nicknameLength> times
+  for (let i = 0; i < nicknameLength; i++) {
+    nicknameArray.push(characters.charAt(random(characters.length)))
+  }
+
+  // return the nickname as a string
+  return nicknameArray.join('')
+}
+
+// if the message contains some form of i love pingbot respond with a heart
+const pingbotLove = message => /\bi\b.+\b(love|like|appreciate)\b.+\bpingbot\b/.test(message.content.toLowerCase())
+  ? message.reply('heart <3')
+  : false
+
+// if the message is 'o o f' either send back 'o o f' or play the sound in voice chat
+const oof = message => {
+  if (message.content.toLowerCase().contains('o o f')) {
+    // get the user's current voice state
+    const voiceState = message.member.voice
+
+    // if they're in a voice channel join and play the oof sound
+    if (voiceState && OOF_READY) {
+      // set OOF_READY to false to prevent overlapping
+      OOF_READY = false
+
+      // save the voice channel
+      const channel = voiceState.channel
+
+      // join the voice channel, play a sound, and leave
+      channel.join().then(connection => {
+        // play the sound file
+        connection.play(join(__dirname, 'sounds', 'oof.ogg')).on('end', () => {
+          console.log('done playing sound')
+
+          // leave the channel
+          channel.leave()
+
+          // set OOF_READY back to true
+          OOF_READY = true
+        })
+      }).catch(err => {
+        // log the error
+        console.error(err)
+
+        // set OOF_READY back to true
+        OOF_READY = true
+      })
+    } else {
+      return message.reply('o o f')
     }
   }
-})
+}
 
-client.login(process.env.BOT_TOKEN)
+main()
