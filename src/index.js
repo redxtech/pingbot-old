@@ -98,7 +98,7 @@ const oof = message => {
     const voiceState = message.member.voice
 
     // if they're in a voice channel join and play the oof sound
-    if (voiceState && OOF_READY) {
+    if (voiceState.channel && OOF_READY) {
       // set OOF_READY to false to prevent overlapping
       OOF_READY = false
 
@@ -108,15 +108,16 @@ const oof = message => {
       // join the voice channel, play a sound, and leave
       channel.join().then(connection => {
         // play the sound file
-        connection.play(join(__dirname, 'sounds', 'oof.ogg')).on('end', () => {
-          console.log('done playing sound')
+        connection.play(join(__dirname, 'sounds', 'oof.ogg'))
 
+        // leave the channel after 1.3 (it feels right) seconds
+        setTimeout(() => {
           // leave the channel
           channel.leave()
 
           // set OOF_READY back to true
           OOF_READY = true
-        })
+        }, 1300)
       }).catch(err => {
         // log the error
         console.error(err)
