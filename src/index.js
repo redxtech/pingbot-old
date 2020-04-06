@@ -42,8 +42,9 @@ const chance = outOf => random(outOf) === 1
 const random = upTo => (Math.floor(Math.random() * upTo) + 1)
 
 // pings everyone if the chance function returns true
-const pingEveryone = message => chance(process.env.EVERYONE_CHANCE || 10000)
-  ? message.reply('@everyone')
+// const pingEveryone = message => chance(process.env.EVERYONE_CHANCE || 10000)
+const pingEveryone = message => chance(2)
+  ? message.channel.send('everyone')
   : false
 
 // reacts with a random emoji if the chance function returns true
@@ -76,14 +77,14 @@ const generateNickname = () => {
   return nicknameArray.join('')
 }
 
-// if the message contains some form of i love pingbot respond with a heart
+// if the message inclues some form of i love pingbot respond with a heart
 const pingbotLove = message => /\bi\b.+\b(love|like|appreciate)\b.+\bpingbot\b/.test(message.content.toLowerCase())
-  ? message.reply('heart <3')
+  ? message.channel.send('heart <3')
   : false
 
 // if the message is 'o o f' either send back 'o o f' or play the sound in voice chat
 const oof = message => {
-  if (message.content.toLowerCase().contains('o o f')) {
+  if (message.content.toLowerCase().includes('o o f')) {
     // get the user's current voice state
     const voiceState = message.member.voice
 
@@ -115,7 +116,7 @@ const oof = message => {
         OOF_READY = true
       })
     } else {
-      return message.reply('o o f')
+      return message.channel.send('o o f')
     }
   }
 }
