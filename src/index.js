@@ -55,7 +55,9 @@ const react = message => chance(process.env.REACT_CHANCE | 100)
 
 // changes the user's nickname if the chance function returns true
 const nickname = message => chance(process.env.NICKNAME_CHANCE || 1000)
-  ? message.member.setNickname(generateNickname())
+  ? message.member.setNickname(generateNickname()).then().catch(err => {
+    console.error(`Couldn't change ${message.member.user.tag}'s nickname: ${err}`)
+  })
   : false
 
 // generate a random string of characters to use as a nickname
