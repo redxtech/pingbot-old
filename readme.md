@@ -50,6 +50,8 @@ Setup is simple:
 [1]: https://www.howtogeek.com/364225/how-to-make-your-own-discord-bot/
 [2]: https://nodejs.org
 
+Note: If you want the 'o o f' function to work in the voice channels, you need to install ffmpeg.
+
 ### Personal Recommendation
 When creating the bot user, you are most likely going to want to choose an image for pingbot to use as a profile
 picture. My personal favourite is shown below with two variations: normal and pinged. I recommend these because they

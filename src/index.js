@@ -108,7 +108,10 @@ const oof = message => {
       // join the voice channel, play a sound, and leave
       channel.join().then(connection => {
         // play the sound file
-        connection.play(join(__dirname, 'sounds', 'oof.ogg'))
+        connection.play(join(__dirname, 'sounds', 'oof.ogg')).on('error', err => {
+          console.error(`Couldn't play sound: ${err}`)
+          process.exit(1)
+        })
 
         // leave the channel after 1.3 (it feels right) seconds
         setTimeout(() => {
