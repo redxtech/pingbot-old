@@ -42,9 +42,8 @@ const chance = outOf => random(outOf) === 1
 const random = upTo => (Math.floor(Math.random() * upTo) + 1)
 
 // pings everyone if the chance function returns true
-// const pingEveryone = message => chance(process.env.EVERYONE_CHANCE || 10000)
-const pingEveryone = message => chance(2)
-  ? message.channel.send('everyone')
+const pingEveryone = message => chance(process.env.EVERYONE_CHANCE || 10000)
+  ? message.channel.send('@everyone')
   : false
 
 // reacts with a random emoji if the chance function returns true
