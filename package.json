@@ -9,7 +9,7 @@
     "start": "node src/index.js"
   },
   "dependencies": {
-    "@discordjs/opus": "^0.1.0",
+    "@discordjs/opus": "^0.3.3",
     "discord.js": "^12.1.1",
     "dotenv": "^8.2.0"
   },
